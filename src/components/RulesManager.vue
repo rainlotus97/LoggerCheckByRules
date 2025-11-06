@@ -168,7 +168,6 @@ const {
   addRule,
   exportRulesToFile,
   importRulesFromFile,
-  resetToDefault,
   clearRules
 } = ruleEngine;
 
@@ -284,17 +283,6 @@ const handleFileImport = async (event: Event) => {
     console.error('导入规则失败:', error);
   } finally {
     target.value = '';
-  }
-};
-
-// 恢复默认规则
-const restoreDefaultRules = () => {
-  try {
-    resetToDefault();
-    loadRules();
-    showStorageMenu.value = false;
-  } catch (error) {
-    console.error('恢复默认规则失败:', error);
   }
 };
 

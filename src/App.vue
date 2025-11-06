@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import LogViewer from '@/components/LogViewer.vue';
+import RuleAnalysis from '@/components/RuleAnalysis.vue';
+import RulesManager from '@/components/RulesManager.vue';
 import { useLogReader } from '@/composables/useLogReader';
 import { useRuleEngine } from '@/composables/useRuleEngine';
-import LogViewer from '@/components/LogViewer.vue';
-import RulesManager from '@/components/RulesManager.vue';
-import RuleAnalysis from '@/components/RuleAnalysis.vue';
+import { ref, watch } from 'vue';
 
 // 标签页状态
 const activeTab = ref<'logs' | 'rules' | 'analysis'>('logs');
@@ -71,8 +71,6 @@ watch(() => state.value.logs, (newLogs, oldLogs) => {
   }
 });
 
-// 计算属性：是否有日志数据
-const hasLogs = computed(() => state.value.logs.length > 0);
 </script>
 
 <template>

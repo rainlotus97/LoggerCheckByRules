@@ -44,7 +44,7 @@
               <div class="form-group">
                 <label>匹配模式 *</label>
                 <div class="patterns-list">
-                  <div v-for="(pattern, patternIndex) in processRule.patterns" :key="patternIndex" class="pattern-item">
+                  <div v-for="(_, patternIndex) in processRule.patterns" :key="patternIndex" class="pattern-item">
                     <input type="text" v-model="processRule.patterns[patternIndex]" placeholder="输入关键词或正则表达式"
                       class="form-input pattern-input" />
                     <button @click="removePattern(index, patternIndex)" class="btn-icon danger" title="删除此模式">
@@ -80,7 +80,7 @@
         </p>
 
         <div class="patterns-list">
-          <div v-for="(pattern, index) in editingRule.successPatterns" :key="index" class="pattern-item">
+          <div v-for="(_, index) in editingRule.successPatterns" :key="index" class="pattern-item">
             <input type="text" v-model="editingRule.successPatterns[index]" placeholder="如：startplay_success、渲染完成等"
               class="form-input pattern-input" />
             <button @click="removeSuccessPattern(index)" class="btn-icon danger" title="删除此模式">
@@ -106,7 +106,7 @@
         </p>
 
         <div class="patterns-list">
-          <div v-for="(pattern, index) in editingRule.failedPatterns" :key="index" class="pattern-item">
+          <div v-for="(_, index) in editingRule.failedPatterns" :key="index" class="pattern-item">
             <input type="text" v-model="editingRule.failedPatterns[index]" placeholder="如：startplay_failed、加载失败等"
               class="form-input pattern-input" />
             <button @click="removeFailedPattern(index)" class="btn-icon danger" title="删除此模式">

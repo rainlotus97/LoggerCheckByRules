@@ -29,7 +29,7 @@ const selectedRuleNames = computed(() => {
 });
 
 // 监听可用规则变化，自动更新选中状态
-watch(() => props.availableRules, (newRules, oldRules) => {
+watch(() => props.availableRules, (newRules) => {
   if (newRules.length === 0) {
     // 如果没有规则，清空选择
     selectedRules.value = [];

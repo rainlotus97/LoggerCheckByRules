@@ -159,17 +159,6 @@ class RuleEngine {
       throw new Error(`规则JSON格式错误: ${error instanceof Error ? error.message : '未知错误'}`);
     }
   }
-  // 添加规则验证方法
-  private isValidRule(rule: any): rule is AnalysisRule {
-    return (
-      rule &&
-      typeof rule.name === 'string' &&
-      Array.isArray(rule.processRules) &&
-      rule.processRules.length > 0 &&
-      Array.isArray(rule.successPatterns) &&
-      rule.successPatterns.length > 0
-    );
-  }
 
   analyzeLogs(logs: LogEntry[], selectedRuleNames?: string[]): RuleMatchResult[] {
     const results: RuleMatchResult[] = [];
@@ -355,7 +344,7 @@ class RuleEngine {
    * 检查是否可以推断某个过程
    */
   private canInferProcess(
-    processRule: ProcessRule,
+    _processRule: ProcessRule,
     rule: AnalysisRule,
     logs: LogEntry[],
     currentIndex: number,
@@ -385,7 +374,7 @@ class RuleEngine {
    * 确定实例的最终状态
    */
   private determineInstanceStatus(
-    rule: AnalysisRule,
+    _rule: AnalysisRule,
     processResults: ProcessResult[],
     successLogs: LogEntry[],
     failedLogs: LogEntry[],
@@ -423,222 +412,6 @@ class RuleEngine {
     }
 
     return { status: 'unknown', confidence: 'low' };
-  }
-
-  private analyzeSingleRule(rule: AnalysisRule, logs: LogEntry[]): RuleMatchResult | null {
-    const processResults: ProcessResult[] = [];
-    const successLogs: LogEntry[] = [];
-    const failedLogs: LogEntry[] = [];
-    const inferredFrom: string[] = [];
-
-    let currentIndex = 0;
-    let startTime: Date | null = null;
-    let endTime: Date | null = null;
-
-    // 按顺序检查每个过程规则
-    for (const processRule of rule.processRules) {
-      const processLogs = this.findMatchingLogs(logs, processRule.patterns, currentIndex);
-
-      if (processLogs.length > 0) {
-        processResults.push({
-          processName: processRule.name,
-          status: 'matched',
-          matchedLogs: processLogs
-        });
-
-        // 更新当前索引和时间范围
-        currentIndex = logs.indexOf(processLogs[processLogs.length - 1]) + 1;
-        if (!startTime) {
-          startTime = new Date(processLogs[0].timestamp);
-        }
-        endTime = new Date(processLogs[processLogs.length - 1].timestamp);
-
-      } else {
-        // 没有找到匹配日志，尝试推断
-        const inferredResult = this.inferProcessRule(processRule, logs, currentIndex, rule, processResults);
-        processResults.push(inferredResult);
-
-        if (inferredResult.status === 'inferred' && inferredResult.inferredReason) {
-          inferredFrom.push(inferredResult.inferredReason);
-        }
-      }
-    }
-
-    // 检查成功和失败模式
-    const allSuccessLogs = this.findMatchingLogs(logs, rule.successPatterns);
-    const allFailedLogs = this.findMatchingLogs(logs, rule.failedPatterns);
-
-    successLogs.push(...allSuccessLogs);
-    failedLogs.push(...allFailedLogs);
-
-    // 确定最终状态
-    const finalStatus = this.determineFinalStatus(
-      rule,
-      processResults,
-      successLogs,
-      failedLogs,
-      inferredFrom
-    );
-
-    if (!startTime) {
-      const firstLog = this.findFirstRelevantLog(logs, rule);
-      startTime = firstLog ? new Date(firstLog.timestamp) : new Date();
-    }
-
-    if (!endTime) {
-      endTime = new Date();
-    }
-
-    return {
-      ruleName: rule.name,
-      status: finalStatus.status,
-      confidence: finalStatus.confidence,
-      processResults,
-      evidence: {
-        successLogs,
-        failedLogs,
-        inferredFrom
-      },
-      timeRange: {
-        start: startTime,
-        end: endTime
-      }
-    };
-  }
-
-  private inferProcessRule(
-    processRule: ProcessRule,
-    logs: LogEntry[],
-    currentIndex: number,
-    rule: AnalysisRule,
-    previousResults: ProcessResult[]
-  ): ProcessResult {
-    // 检查后续过程规则是否有匹配
-    const subsequentIndex = rule.processRules.indexOf(processRule);
-    const subsequentRules = rule.processRules.slice(subsequentIndex + 1);
-
-    for (const subsequentRule of subsequentRules) {
-      const subsequentLogs = this.findMatchingLogs(logs, subsequentRule.patterns, currentIndex);
-      if (subsequentLogs.length > 0) {
-        return {
-          processName: processRule.name,
-          status: 'inferred',
-          matchedLogs: [],
-          inferredReason: `由后续规则"${subsequentRule.name}"推断完成`
-        };
-      }
-    }
-
-    // 检查成功/失败模式
-    const successLogs = this.findMatchingLogs(logs, rule.successPatterns, currentIndex);
-    const failedLogs = this.findMatchingLogs(logs, rule.failedPatterns, currentIndex);
-
-    if (successLogs.length > 0) {
-      return {
-        processName: processRule.name,
-        status: 'inferred',
-        matchedLogs: [],
-        inferredReason: '由成功结果推断完成'
-      };
-    }
-
-    if (failedLogs.length > 0) {
-      return {
-        processName: processRule.name,
-        status: 'inferred',
-        matchedLogs: [],
-        inferredReason: '由失败结果推断完成'
-      };
-    }
-
-    // 无法推断
-    return {
-      processName: processRule.name,
-      status: 'missing',
-      matchedLogs: []
-    };
-  }
-
-  private determineFinalStatus(
-    rule: AnalysisRule,
-    processResults: ProcessResult[],
-    successLogs: LogEntry[],
-    failedLogs: LogEntry[],
-    inferredFrom: string[]
-  ): { status: RuleMatchResult['status']; confidence: RuleMatchResult['confidence'] } {
-    // 明确成功
-    if (successLogs.length > 0) {
-      return { status: 'success', confidence: 'high' };
-    }
-
-    // 明确失败
-    if (failedLogs.length > 0) {
-      return { status: 'failed', confidence: 'high' };
-    }
-
-    // 检查所有过程规则是否都完成（匹配或推断）
-    const allProcessesCompleted = processResults.every(result =>
-      result.status === 'matched' || result.status === 'inferred'
-    );
-
-    if (allProcessesCompleted) {
-      if (inferredFrom.length > 0) {
-        return { status: 'inferred_success', confidence: 'medium' };
-      } else {
-        return { status: 'success', confidence: 'high' };
-      }
-    }
-
-    // 检查是否有失败推断
-    const hasFailedInference = processResults.some(result =>
-      result.inferredReason?.includes('失败')
-    );
-
-    if (hasFailedInference) {
-      return { status: 'inferred_failed', confidence: 'low' };
-    }
-
-    return { status: 'unknown', confidence: 'low' };
-  }
-
-  private findMatchingLogs(logs: LogEntry[], patterns: string[], startIndex: number = 0): LogEntry[] {
-    const matchingLogs: LogEntry[] = [];
-
-    for (let i = startIndex; i < logs.length; i++) {
-      const log = logs[i];
-      for (const pattern of patterns) {
-        if (log.message.includes(pattern) || log.fullLine.includes(pattern)) {
-          matchingLogs.push(log);
-          break;
-        }
-      }
-    }
-
-    return matchingLogs;
-  }
-
-  private findFirstRelevantLog(logs: LogEntry[], rule: AnalysisRule): LogEntry | null {
-    for (const log of logs) {
-      // 检查是否匹配任何过程规则
-      for (const processRule of rule.processRules) {
-        if (processRule.patterns.some(pattern =>
-          log.message.includes(pattern) || log.fullLine.includes(pattern)
-        )) {
-          return log;
-        }
-      }
-
-      // 检查是否匹配成功/失败模式
-      if (rule.successPatterns.some(pattern =>
-        log.message.includes(pattern) || log.fullLine.includes(pattern)
-      ) || rule.failedPatterns.some(pattern =>
-        log.message.includes(pattern) || log.fullLine.includes(pattern)
-      )) {
-        return log;
-      }
-    }
-
-    return null;
   }
 
   getRules(): AnalysisRule[] {
