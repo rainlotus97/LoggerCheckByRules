@@ -204,7 +204,7 @@ const showEditForm = ref(false);
 const showImportDialog = ref(false);
 const showDeleteConfirm = ref(false);
 const searchQuery = ref('');
-const editingRule = ref<ValidationRule | null>(null);
+const editingRule = ref<ValidationRule | undefined>(undefined);
 const deletingRule = ref<ValidationRule | null>(null);
 
 // 导入相关状态
@@ -274,7 +274,7 @@ const handleFormSubmit = (formData: RuleFormData) => {
 const closeForm = () => {
 	showCreateForm.value = false;
 	showEditForm.value = false;
-	editingRule.value = null;
+	editingRule.value = undefined;
 };
 
 const handleExport = () => {
