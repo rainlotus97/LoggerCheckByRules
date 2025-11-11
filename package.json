@@ -12,6 +12,7 @@
     "less": "^4.4.2",
     "less-loader": "^12.3.0",
     "pinia": "^3.0.4",
+    "pinia-plugin-persistedstate": "^4.7.1",
     "vue": "^3.5.12",
     "vue-router": "^4.6.3"
   },

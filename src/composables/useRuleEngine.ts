@@ -94,7 +94,7 @@ class RuleEngine {
   /**
   * 添加示例规则
   */
-  private addExampleRule(): void {
+  public addExampleRule(): void {
     const exampleRule: AnalysisRule = {
       name: "startplayer-text",
       description: "起播流程验证",
@@ -463,6 +463,11 @@ export function useRuleEngine() {
     return rulesList.value;
   };
 
+  // 添加获取响应式规则列表的方法
+  const getRulesRef = () => {
+    return rulesList;
+  };
+
   // 删除规则
   const removeRule = (ruleName: string): void => {
     ruleEngine.value.removeRule(ruleName);
@@ -535,28 +540,7 @@ export function useRuleEngine() {
 
   const resetToDefault = (): void => {
     ruleEngine.value.clearRules();
-    // 重新添加示例规则
-    const exampleRule: AnalysisRule = {
-      name: "startplayer-text",
-      description: "起播流程验证",
-      processRules: [
-        {
-          name: "开始起播",
-          patterns: ["startplay"]
-        },
-        {
-          name: "章节列表加载成功",
-          patterns: ["onChapterListLoaded"]
-        },
-        {
-          name: "章节加载成功",
-          patterns: ["onChaptersLoaded"]
-        }
-      ],
-      successPatterns: ["startplay_success"],
-      failedPatterns: ["startplay_failed"]
-    };
-    addRule(exampleRule);
+    ruleEngine.value.addExampleRule();
   };
 
   return {
@@ -564,6 +548,7 @@ export function useRuleEngine() {
     analyzeWithRules,
     importRule,
     getRules,
+    getRulesRef,
     removeRule,
     addRule,
     exportAllRules,

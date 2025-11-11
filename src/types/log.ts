@@ -1,4 +1,3 @@
-// types/log.ts
 export type LogLevel = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR';
 
 export interface LogEntry {
