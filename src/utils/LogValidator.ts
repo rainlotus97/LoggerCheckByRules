@@ -1,8 +1,5 @@
-import type {
-  LogEntry, ValidationRule, ProcessInstance,
-  StepExecution, StepStatus, ValidationResult,
-  RuleStep
-} from '@/types/logRules';
+import { RuleStep, ValidationRule } from '@/types/FlowRuleType';
+import type { LogEntry, ProcessInstance, StepExecution, StepStatus, ValidationResult, } from '@/types/FlowType';
 
 export class LogValidator {
   private rules: ValidationRule[] = [];
@@ -247,14 +244,31 @@ export class LogValidator {
   }
 
   // 模式匹配
-  private matchesPattern(message: string, pattern: string | RegExp | ((log: string) => boolean)): boolean {
-    if (typeof pattern === 'string') {
-      return message.includes(pattern);
-    } else if (pattern instanceof RegExp) {
-      return pattern.test(message);
-    } else {
-      return pattern(message);
+  private matchesPattern(message: string, pattern: string): boolean {
+    let isUseRegex = this.shouldUseRegex(pattern);
+    if (isUseRegex) {
+      return new RegExp(pattern).test(message);
     }
+    return message.includes(pattern) || false;
+  }
+
+  // 识别模式类型
+  private shouldUseRegex(pattern: string): boolean {
+    // 排除明显是普通字符串的情况
+    if (pattern.length <= 2) return false;
+
+    // 检测常见的正则表达式特征
+    const regexIndicators = [
+      /[.*+?|{}[\]^$()]/, // 特殊字符
+      /\\[dDwWsS]/,       // 预定义字符类
+      /\\[\\bB]/,         // 单词边界
+      /\(.*\)/,           // 分组
+      /\[.*\]/,           // 字符类
+      /\{.*\}/,           // 量词
+      /^\/.*\/[gimuy]*$/  // 已经是正则表达式字面量格式
+    ];
+
+    return regexIndicators.some(indicator => indicator.test(pattern));
   }
 
   // 生成摘要

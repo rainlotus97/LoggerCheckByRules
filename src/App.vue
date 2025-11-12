@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import GlobalTips from '@/components/container/GlobalTips.vue';
 import Header from '@/components/container/Header.vue';
-import LogOperationsBar from '@/components/container/LogOperationsBar.vue';
-import { ActiveTab } from '@/types/common';
+import OperationsBar from '@/components/container/OperationsBar.vue';
+import { ActiveTab } from '@/types/Common';
 import { getRouteByTab, getTabByRoute } from '@/utils/CommonUtils';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -28,9 +28,9 @@ watch(() => activeTab.value, (newType, oldType) => {
 
     <!-- 主体内容区域 -->
     <div class="app-main">
+      <!-- 操作栏 -->
       <div class="tab-content mb10">
-        <!-- 常驻操作栏 -->
-        <LogOperationsBar />
+        <OperationsBar />
       </div>
       <div class="tab-content">
         <RouterView />

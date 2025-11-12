@@ -1,9 +1,9 @@
 <script setup lang='ts'>
-import { useLogStore } from '@/stores/LogStore';
-import { ActiveTab } from '@/types/common';
+import { useCommonStore } from '@/stores/LogStore';
+import { ActiveTab } from '@/types/Common';
 
-const logStore = useLogStore();
-const props = defineProps<{
+const logStore = useCommonStore();
+defineProps<{
   activeTab: ActiveTab;
 }>();
 
@@ -51,7 +51,7 @@ const switchToAnalysis = () => {
         </button>
         <button :class="['nav-btn', { active: activeTab === ActiveTab.RULES }]" @click="switchToRules">
           <span class="nav-icon">⚙️</span>
-          <span class="nav-text">规则管理</span>
+          <span class="nav-text">流程规则</span>
         </button>
         <button :class="['nav-btn', { active: activeTab === ActiveTab.LOG_RULES }]" @click="switchToLogRules">
           <span class="nav-icon">📝</span>

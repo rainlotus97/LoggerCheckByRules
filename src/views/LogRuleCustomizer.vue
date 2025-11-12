@@ -151,7 +151,7 @@
           <h3>已保存的规则</h3>
 
           <div v-if="logStore.hasRules" class="rules-list">
-            <div v-for="rule in logStore.rules" :key="rule.id" class="rule-item">
+            <div v-for="rule in logStore.formatRules" :key="rule.id" class="rule-item">
               <div class="rule-header">
                 <h4>{{ rule.name }}</h4>
                 <div class="rule-actions">
@@ -305,9 +305,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useLogRuleStore } from '@/stores/LogRuleStore'
+import { useLogFormatStore } from '@/stores/LogFormatStore'
 
-const logStore = useLogRuleStore()
+const logStore = useLogFormatStore()
 const editingField = ref<any>(null)
 
 const showTestModal = ref(false)
@@ -455,9 +455,9 @@ const saveRule = () => {
   if (!canSaveRule.value) return
 
   if (logStore.isEditing) {
-    logStore.updateRule(logStore.editingRule!.id, ruleForm.value)
+    logStore.updateFormatRule(logStore.editingRule!.id, ruleForm.value)
   } else {
-    logStore.addRule(ruleForm.value)
+    logStore.addFormatRules(ruleForm.value)
   }
 }
 
@@ -474,7 +474,7 @@ const editRule = (rule: any) => {
 
 const deleteRule = (ruleId: string) => {
   if (confirm('确定要删除这个规则吗？')) {
-    logStore.deleteRule(ruleId)
+    logStore.deleteFormatRule(ruleId)
   }
 }
 
@@ -522,7 +522,7 @@ watch(() => newField.value.type, (newType) => {
 })
 
 onMounted(() => {
-  logStore.loadRules()
+  logStore.loadFormatRules()
 })
 </script>
 

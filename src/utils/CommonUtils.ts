@@ -1,4 +1,4 @@
-import { ActiveTab } from "@/types/common";
+import { ActiveTab } from "@/types/Common";
 
 // 根据标签页类型获取对应路由路径
 export const getRouteByTab = (tab: ActiveTab): string => {

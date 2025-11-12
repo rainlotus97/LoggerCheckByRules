@@ -183,11 +183,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useRuleStore } from '@/stores/RulesStore';
+import { useFlowRulesStore } from '@/stores/FlowRulesStore';
 import RuleForm from '@/components/RuleForm.vue';
-import type { ValidationRule, RuleFormData } from '@/types/rule';
+import type { ValidationRule, FlowRuleFormData } from '@/types/FlowRuleType';
 
-const ruleStore = useRuleStore();
+const ruleStore = useFlowRulesStore();
 const { rules, loading, rulesCount } = storeToRefs(ruleStore);
 const {
   loadRules,
@@ -262,7 +262,7 @@ const confirmDelete = () => {
   }
 };
 
-const handleFormSubmit = (formData: RuleFormData) => {
+const handleFormSubmit = (formData: FlowRuleFormData) => {
   if (showEditForm.value && editingRule.value) {
     updateRule(editingRule.value.id, formData);
   } else {

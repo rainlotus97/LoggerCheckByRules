@@ -30,7 +30,7 @@ export interface LogField {
 }
 
 // 日志规则接口
-export interface LogRule {
+export interface LogFormat {
   id: string
   name: string
   description: string

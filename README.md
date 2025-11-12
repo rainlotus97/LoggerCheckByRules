@@ -94,48 +94,39 @@ npm run build
 
 ### 核心模块
 ```
-src/
-├── assets/                       # 静态资源目录
-│   ├── test.json                 # 测试数据文件
-│   └── vue.svg                   # Vue 图标资源
-├── components/                   # Vue 组件目录
-│   ├── container/                # 容器组件
-│   │   ├── GlobalTips.vue        # 全局提示组件
-│   │   ├── Header.vue            # 页面头部组件
-│   │   └── LogOperationsBar.vue  # 日志操作栏组件
-│   └── RuleForm.vue              # 规则表单组件
-├── composables/                  # Vue 组合式函数
-│   ├── useLogReader.ts           # 日志读取逻辑
-│   └── useRuleEngine.ts          # 规则引擎逻辑
-├── example/                      # 示例文件目录
-│   ├── BookReaderRule.ts         # 电子书阅读器规则示例
-│   └── TestLogs.ts               # 测试日志数据示例
-├── router/                       # 路由配置目录
-│   └── Index.ts                  # 路由配置文件
-├── services/                     # 服务层
-│   ┗── LogReaderService.ts       # 日志读取服务
-├── stores/                       # Pinia 状态管理
-│   ├── LogRuleStore.ts           # 日志规则状态管理
-│   ├── LogStore.ts               # 日志数据状态管理
-│   ┗── RulesStore.ts             # 规则配置状态管理
-├── types/                        # TypeScript 类型定义
-│   ├── common.ts                 # 通用类型定义
-│   ├── log.ts                    # 日志相关类型
-│   ├── logRules.ts               # 日志规则类型
-│   ┗── rule.ts                   # 规则配置类型
-├── utils/                        # 工具函数目录
-│   ├── CommonUtils.ts            # 通用工具函数
-│   ┗── LogValidator.ts           # 日志验证器
-├── views/                        # 页面视图组件
-│   ├── LogRuleCustomizer.vue     # 日志规则定制页面
-│   ├── LogViewer.vue             # 日志查看器页面
-│   ├── NotFound.vue              # 404 页面
-│   ├── RuleAnalysis.vue          # 规则分析页面
-│   ┗── RuleManager.vue           # 规则管理页面
-├── App.vue                       # Vue 应用根组件
-├── main.ts                       # 应用入口文件
-├── style.css                     # 全局样式文件
-└── vite-env.d.ts                 # Vite 环境类型声明
+src
+ ┣ assets                         # 静态资源目录（图片、样式、字体等）
+ ┣ components                     # 可复用组件目录
+ ┃ ┣ container                    # 布局容器组件
+ ┃ ┃ ┣ GlobalTips.vue             # 全局提示组件（显示系统级提示信息）
+ ┃ ┃ ┣ Header.vue                 # 页面头部组件（导航栏、标题等）
+ ┃ ┃ ┗ OperationsBar.vue          # 操作栏组件（常用操作按钮集合）
+ ┃ ┗ RuleForm.vue                 # 规则表单组件（创建/编辑验证规则）
+ ┣ router                         # 路由配置目录
+ ┃ ┗ Index.ts                     # 路由配置文件（定义页面路由和权限）
+ ┣ stores                         # 状态管理目录（Pinia Store）
+ ┃ ┣ FlowRulesStore.ts            # 流程规则存储（管理验证规则的CRUD操作）
+ ┃ ┣ LogFormatStore.ts            # 日志格式存储（管理日志解析格式配置）
+ ┃ ┗ LogStore.ts                  # 日志存储（管理上传的日志文件和数据）
+ ┣ types                          # TypeScript类型定义目录
+ ┃ ┣ AnalysisTypes.ts             # 分析相关类型（分析会话、消息、结果等）
+ ┃ ┣ Common.ts                    # 通用类型（消息类型、日志字段、文件等）
+ ┃ ┣ FlowRuleType.ts              # 流程规则类型（规则步骤、验证规则等）
+ ┃ ┗ FlowType.ts                  # 流程相关类型（日志条目、流程实例等）
+ ┣ utils                          # 工具函数目录
+ ┃ ┣ CommonUtils.ts               # 通用工具函数（日期格式化、数据处理等）
+ ┃ ┣ InteractiveAnalyzer.ts       # 交互式分析器（执行规则分析和流程验证）
+ ┃ ┗ LogValidator.ts              # 日志验证器（验证日志格式和完整性）
+ ┣ views                          # 页面组件目录
+ ┃ ┣ LogRuleCustomizer.vue        # 日志规则定制页面（自定义日志解析规则）
+ ┃ ┣ LogViewer.vue                # 日志查看器页面（查看和分析日志文件）
+ ┃ ┣ NotFound.vue                 # 404页面（路由不存在时显示）
+ ┃ ┣ RuleAnalysis.vue             # 规则分析页面（交互式规则验证工作台）
+ ┃ ┗ RuleManager.vue              # 规则管理页面（管理验证规则库）
+ ┣ App.vue                        # 应用根组件（主布局和路由视图）
+ ┣ main.ts                        # 应用入口文件（Vue应用初始化）
+ ┣ style.css                      # 全局样式文件（应用级样式定义）
+ ┗ vite-env.d.ts                  # Vite类型声明文件（Vite相关类型定义）
 ```
 
 ### 数据流

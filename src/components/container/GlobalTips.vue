@@ -13,10 +13,10 @@
 </template>
 
 <script setup lang="ts">
-import { useLogStore } from '@/stores/LogStore';
-import { MessageType } from '@/types/common';
+import { useCommonStore } from '@/stores/LogStore';
+import { MessageType } from '@/types/Common';
 import { computed } from 'vue';
-const logStore = useLogStore();
+const logStore = useCommonStore();
 let globalMessage = computed(() => logStore.globalMessage);
 
 const emit = defineEmits<{

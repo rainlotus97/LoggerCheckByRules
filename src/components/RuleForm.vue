@@ -118,7 +118,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue';
-import type { RuleFormData, ValidationRule } from '@/types/rule';
+import type { FlowRuleFormData, ValidationRule } from '@/types/FlowRuleType';
 
 interface Props {
 	rule?: ValidationRule;
@@ -130,11 +130,11 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-	submit: [data: RuleFormData];
+	submit: [data: FlowRuleFormData];
 	cancel: [];
 }>();
 
-const defaultFormData: RuleFormData = {
+const defaultFormData: FlowRuleFormData = {
 	name: '',
 	description: '',
 	startPattern: '',
@@ -151,7 +151,7 @@ const defaultFormData: RuleFormData = {
 	]
 };
 
-const formData = ref<RuleFormData>({ ...defaultFormData });
+const formData = ref<FlowRuleFormData>({ ...defaultFormData });
 
 // 表单验证
 const isFormValid = computed(() => {

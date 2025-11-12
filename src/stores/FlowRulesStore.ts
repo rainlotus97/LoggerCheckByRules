@@ -1,9 +1,8 @@
-// stores/ruleStore.ts
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { ValidationRule, RuleFormData } from '@/types/rule';
+import type { ValidationRule, FlowRuleFormData } from '@/types/FlowRuleType';
 
-export const useRuleStore = defineStore('rules', () => {
+export const useFlowRulesStore = defineStore('flowRules', () => {
   const rules = ref<ValidationRule[]>([]);
   const loading = ref(false);
 
@@ -38,7 +37,7 @@ export const useRuleStore = defineStore('rules', () => {
   };
 
   // 新增规则
-  const addRule = (formData: RuleFormData) => {
+  const addRule = (formData: FlowRuleFormData) => {
     const newRule: ValidationRule = {
       ...formData,
       id: generateId(),
@@ -56,7 +55,7 @@ export const useRuleStore = defineStore('rules', () => {
   };
 
   // 更新规则
-  const updateRule = (id: string, formData: RuleFormData) => {
+  const updateRule = (id: string, formData: FlowRuleFormData) => {
     const index = rules.value.findIndex(rule => rule.id === id);
     if (index !== -1) {
       rules.value[index] = {

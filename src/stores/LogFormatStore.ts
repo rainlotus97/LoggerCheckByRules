@@ -1,16 +1,17 @@
-import { LogField, LogRule } from '@/types/common'
+import { LogField, LogFormat } from '@/types/Common'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-export const useLogRuleStore = defineStore('logRule', () => {
+// 日志格式规则存储
+export const useLogFormatStore = defineStore('logFormat', () => {
   // 状态
-  const rules = ref<LogRule[]>([])
+  const formatRules = ref<LogFormat[]>([])
   const currentLog = ref('')
   const selectedText = ref('')
   const selectionStart = ref(-1)
   const selectionEnd = ref(-1)
   const currentFields = ref<LogField[]>([])
-  const editingRule = ref<LogRule | null>(null)
+  const editingRule = ref<LogFormat | null>(null)
 
   // 预定义字段类型
   const fieldTypes = [
@@ -22,12 +23,11 @@ export const useLogRuleStore = defineStore('logRule', () => {
     { value: 'custom', label: '自定义', icon: '🔧' }
   ]
 
-  // 从 localStorage 加载数据
-  const loadRules = () => {
+  const loadFormatRules = () => {
     try {
-      const saved = localStorage.getItem('log-rules')
+      const saved = localStorage.getItem('log-format')
       if (saved) {
-        rules.value = JSON.parse(saved).map((rule: any) => ({
+        formatRules.value = JSON.parse(saved).map((rule: any) => ({
           ...rule,
           createdAt: new Date(rule.createdAt),
           updatedAt: new Date(rule.updatedAt)
@@ -39,9 +39,9 @@ export const useLogRuleStore = defineStore('logRule', () => {
   }
 
   // 保存数据到 localStorage
-  const saveRules = () => {
+  const saveFormatRules = () => {
     try {
-      localStorage.setItem('log-rules', JSON.stringify(rules.value))
+      localStorage.setItem('log-format', JSON.stringify(formatRules.value))
     } catch (error) {
       console.error('保存规则失败:', error)
     }
@@ -129,51 +129,51 @@ export const useLogRuleStore = defineStore('logRule', () => {
   }
 
   // 添加新规则
-  const addRule = (ruleData: { name: string; description: string }) => {
+  const addFormatRules = (formatData: { name: string; description: string }) => {
     const separatorField = currentFields.value.find(f => f.isSeparator)
     
-    const newRule: LogRule = {
+    const newRule: LogFormat = {
       id: `rule-${Date.now()}`,
-      name: ruleData.name,
-      description: ruleData.description,
+      name: formatData.name,
+      description: formatData.description,
       fields: [...currentFields.value],
       separatorFieldId: separatorField?.id,
       createdAt: new Date(),
       updatedAt: new Date()
     }
     
-    rules.value.push(newRule)
-    saveRules()
+    formatRules.value.push(newRule)
+    saveFormatRules()
     resetCurrent()
   }
 
   // 更新规则
-  const updateRule = (ruleId: string, ruleData: { name: string; description: string }) => {
-    const ruleIndex = rules.value.findIndex(r => r.id === ruleId)
+  const updateFormatRule = (ruleId: string, ruleData: { name: string; description: string }) => {
+    const ruleIndex = formatRules.value.findIndex(r => r.id === ruleId)
     if (ruleIndex !== -1) {
       const separatorField = currentFields.value.find(f => f.isSeparator)
       
-      rules.value[ruleIndex] = {
-        ...rules.value[ruleIndex],
+      formatRules.value[ruleIndex] = {
+        ...formatRules.value[ruleIndex],
         name: ruleData.name,
         description: ruleData.description,
         fields: [...currentFields.value],
         separatorFieldId: separatorField?.id,
         updatedAt: new Date()
       }
-      saveRules()
+      saveFormatRules()
       resetCurrent()
     }
   }
 
   // 删除规则
-  const deleteRule = (ruleId: string) => {
-    rules.value = rules.value.filter(r => r.id !== ruleId)
-    saveRules()
+  const deleteFormatRule = (ruleId: string) => {
+    formatRules.value = formatRules.value.filter(r => r.id !== ruleId)
+    saveFormatRules()
   }
 
   // 开始编辑规则
-  const startEditRule = (rule: LogRule) => {
+  const startEditRule = (rule: LogFormat) => {
     editingRule.value = rule
     currentLog.value = rule.fields.map(f => f.text).join(' ')
     currentFields.value = [...rule.fields]
@@ -188,16 +188,16 @@ export const useLogRuleStore = defineStore('logRule', () => {
   }
 
   // 计算属性
-  const hasRules = computed(() => rules.value.length > 0)
+  const hasRules = computed(() => formatRules.value.length > 0)
   const isEditing = computed(() => editingRule.value !== null)
   const hasSelection = computed(() => selectedText.value.length > 0)
   const separatorField = computed(() => currentFields.value.find(f => f.isSeparator))
 
   // 初始化加载
-  loadRules()
+  loadFormatRules()
 
   // 测试规则解析日志
-const testParseLog = (logLine: string, rule: LogRule) => {
+const testParseLog = (logLine: string, rule: LogFormat) => {
   const result: Record<string, string> = {}
   let remainingLog = logLine.trim()
   
@@ -253,7 +253,7 @@ const testParseLog = (logLine: string, rule: LogRule) => {
 }
 
 // 批量测试多条日志
-const batchTestParse = (logLines: string[], rule: LogRule) => {
+const batchTestParse = (logLines: string[], rule: LogFormat) => {
   return logLines.map(logLine => ({
     log: logLine,
     result: testParseLog(logLine, rule)
@@ -262,7 +262,7 @@ const batchTestParse = (logLines: string[], rule: LogRule) => {
 
   return {
     // 状态
-    rules,
+    formatRules,
     currentLog,
     selectedText,
     selectionStart,
@@ -278,17 +278,17 @@ const batchTestParse = (logLines: string[], rule: LogRule) => {
     separatorField,
     
     // 方法
-    loadRules,
-    saveRules,
+    loadFormatRules,
+    saveFormatRules,
     setCurrentLog,
     setSelection,
     addField,
     updateField,
     deleteField,
     clearSelection,
-    addRule,
-    updateRule,
-    deleteRule,
+    addFormatRules,
+    updateFormatRule,
+    deleteFormatRule,
     startEditRule,
     resetCurrent,
     testParseLog,

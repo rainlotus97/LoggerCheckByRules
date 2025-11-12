@@ -1,9 +1,9 @@
-import type { GlobalMessage, LogFile } from '@/types/common';
+import { GlobalMessage, LogFile } from "@/types/Common";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
 // 日志全局存储
-export const useLogStore = defineStore('logStore',
+export const useCommonStore = defineStore('logStore',
   () => {
     // 全局消息提示
     const globalMessage = ref<GlobalMessage | null>(null);
