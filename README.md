@@ -95,18 +95,47 @@ npm run build
 ### 核心模块
 ```
 src/
-├── components/          # Vue 组件
-│   ├── LogViewer.vue   # 日志查看器
-│   ├── RulesManager.vue # 规则管理器
-│   ├── RuleAnalysis.vue # 规则分析器
-│   └── RuleEditor.vue  # 规则编辑器
-├── composables/         # 组合式函数
-│   ├── useLogReader.ts # 日志读取逻辑
-│   └── useRuleEngine.ts # 规则引擎逻辑
-├── services/           # 服务层
-│   └── LogReaderService.ts # 日志读取服务
-└── types/              # 类型定义
-    └── log.ts          # 日志相关类型
+├── assets/                       # 静态资源目录
+│   ├── test.json                 # 测试数据文件
+│   └── vue.svg                   # Vue 图标资源
+├── components/                   # Vue 组件目录
+│   ├── container/                # 容器组件
+│   │   ├── GlobalTips.vue        # 全局提示组件
+│   │   ├── Header.vue            # 页面头部组件
+│   │   └── LogOperationsBar.vue  # 日志操作栏组件
+│   └── RuleForm.vue              # 规则表单组件
+├── composables/                  # Vue 组合式函数
+│   ├── useLogReader.ts           # 日志读取逻辑
+│   └── useRuleEngine.ts          # 规则引擎逻辑
+├── example/                      # 示例文件目录
+│   ├── BookReaderRule.ts         # 电子书阅读器规则示例
+│   └── TestLogs.ts               # 测试日志数据示例
+├── router/                       # 路由配置目录
+│   └── Index.ts                  # 路由配置文件
+├── services/                     # 服务层
+│   ┗── LogReaderService.ts       # 日志读取服务
+├── stores/                       # Pinia 状态管理
+│   ├── LogRuleStore.ts           # 日志规则状态管理
+│   ├── LogStore.ts               # 日志数据状态管理
+│   ┗── RulesStore.ts             # 规则配置状态管理
+├── types/                        # TypeScript 类型定义
+│   ├── common.ts                 # 通用类型定义
+│   ├── log.ts                    # 日志相关类型
+│   ├── logRules.ts               # 日志规则类型
+│   ┗── rule.ts                   # 规则配置类型
+├── utils/                        # 工具函数目录
+│   ├── CommonUtils.ts            # 通用工具函数
+│   ┗── LogValidator.ts           # 日志验证器
+├── views/                        # 页面视图组件
+│   ├── LogRuleCustomizer.vue     # 日志规则定制页面
+│   ├── LogViewer.vue             # 日志查看器页面
+│   ├── NotFound.vue              # 404 页面
+│   ├── RuleAnalysis.vue          # 规则分析页面
+│   ┗── RuleManager.vue           # 规则管理页面
+├── App.vue                       # Vue 应用根组件
+├── main.ts                       # 应用入口文件
+├── style.css                     # 全局样式文件
+└── vite-env.d.ts                 # Vite 环境类型声明
 ```
 
 ### 数据流

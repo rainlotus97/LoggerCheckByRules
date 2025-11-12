@@ -179,7 +179,7 @@ export class LogReaderService {
   }
 
   /**
-   * 解析日志内容 - 增强版，支持包名和别名解析
+   * 解析日志内容
    */
   private parseLogContent(content: string, fileName: string): void {
     const lines = content.split('\n');
@@ -195,10 +195,9 @@ export class LogReaderService {
   }
 
   /**
-   * 解析单行日志 - 增强版，支持包名/别名分离
+   * 解析单行日志
    * 格式: 时间 进程号 应用包名/别名/标签 日志内容
    */
-  // 在 LogReaderService.ts 中修复文件处理逻辑
   private parseLogLine(line: string, fileName: string): LogEntry | null {
     // 更灵活的日志解析，适应不同格式
     const parts = line.split(/\s+/);

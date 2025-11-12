@@ -1,4 +1,3 @@
-// examples/bookReaderRuleNoEnd.ts
 import type { ValidationRule } from '@/types/logRules';
 
 // 定义阅读器打开流程规则

@@ -76,7 +76,7 @@
                 :class="{ 'is-separator': field.isSeparator }">
                 <div class="field-header">
                   <span class="field-type">{{ getTypeIcon(field.type) }} {{ getTypeLabel(field.type)
-                  }}</span>
+                    }}</span>
                   <div class="field-actions">
                     <button @click="editField(field)" class="btn-icon" title="编辑">
                       ✏️

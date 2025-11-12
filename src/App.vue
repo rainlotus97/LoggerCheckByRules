@@ -2,16 +2,12 @@
 import GlobalTips from '@/components/container/GlobalTips.vue';
 import Header from '@/components/container/Header.vue';
 import LogOperationsBar from '@/components/container/LogOperationsBar.vue';
-import { useLogReader } from '@/composables/useLogReader';
 import { ActiveTab } from '@/types/common';
 import { getRouteByTab, getTabByRoute } from '@/utils/CommonUtils';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-// 日志读取功能
-const logReader = useLogReader();
-const { state } = logReader;
 
 // 当前活动标签页
 const activeTab = ref<ActiveTab>(getTabByRoute(location.pathname));
@@ -28,7 +24,7 @@ watch(() => activeTab.value, (newType, oldType) => {
 <template>
   <div class="log-analyzer-app">
     <!-- 头部导航 -->
-    <Header :state="state" v-model:active-tab="activeTab" />
+    <Header v-model:active-tab="activeTab" />
 
     <!-- 主体内容区域 -->
     <div class="app-main">

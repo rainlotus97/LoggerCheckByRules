@@ -1,5 +1,5 @@
 <template>
-        RuleAnalysis
+	RuleAnalysis
 </template>
 
 <script setup lang='ts'>

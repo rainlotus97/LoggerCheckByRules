@@ -1,11 +1,9 @@
 <script setup lang='ts'>
 import { useLogStore } from '@/stores/LogStore';
 import { ActiveTab } from '@/types/common';
-import type { LogReaderState } from '@/types/log';
 
 const logStore = useLogStore();
 const props = defineProps<{
-  state: LogReaderState;
   activeTab: ActiveTab;
 }>();
 
@@ -31,7 +29,7 @@ const switchToLogRules = () => {
 
 // 切换到规则分析标签页
 const switchToAnalysis = () => {
-  if (props.state.logs.length === 0) {
+  if (logStore.logFiles.length === 0) {
     logStore.setGlobalMessage({
       type: 'error',
       text: '请先在日志查看页面加载日志文件'
